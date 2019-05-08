@@ -38,5 +38,5 @@ def grab_screen(window_title=None,region=None):
     win32gui.ReleaseDC(hwin, hwindc)
     win32gui.DeleteObject(bmp.GetHandle())
 
-    return img
-    #return cv2.cvtColor(img, cv2.COLOR_BGRA2RGB)
+    #return img
+    return cv2.cvtColor(cv2.cvtColor(img, cv2.COLOR_BGRA2RGB), cv2.COLOR_BGR2RGB)

@@ -7,10 +7,11 @@ keyList = ["\b"]
 for char in "ABCDEFGHIJKLMNOPQRSTUVWXYZ 123456789,.'£$/\\":
     keyList.append(char)
 
-def key_check():
-    keys = []
-    for key in keyList:
+def key_check(keys="WSAD"):
+    keys_d = {}
+    for key in keys:
         if wapi.GetAsyncKeyState(ord(key)):
-            keys.append(key)
-    return keys
- 
+            keys_d[key]=True
+        
+    #print(keys_d)
+    return keys_d
