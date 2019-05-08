@@ -5,6 +5,7 @@
 - [Installation](#Installation)
 - [Input](#Input)
 - [Usage](#Usage)
+- [License](#License)
 
 ### Introduction
 The aim of of this project is to experiment with self driving cars in video games using a number of different techniques. 
@@ -31,3 +32,5 @@ python train_il.py --data <path-to-train-data> --model <name-of-model-architectu
 ```
 which trains the model for Imitation Learning.
 
+### License
+This project uses the [MIT License](https://opensource.org/licenses/MIT)

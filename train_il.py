@@ -7,8 +7,7 @@ import argparse
 import h5py
 import time
 
-def get_model(pretrained,num_classes):
-    #model = torchvision.models.alexnet(pretrained)
+def get_model(pretrained, num_classes):
     model = torchvision.models.AlexNet(num_classes)
     return model
 
@@ -16,29 +15,30 @@ class ImitationLearningDataset(torch.utils.data.Dataset):
 
     def __init__(self, file_name):
         self.file_name = file_name
-        file = h5py.File(file_name,'r')
+        file = h5py.File(file_name, 'r')
         self.len = file['X'].shape[0]
         self.transforms = torchvision.transforms.ToTensor()
 
     def __len__(self):
         return self.len
-    
-    def __getitem__(self,i):
-        with h5py.File(self.file_name,'r') as file:
+
+    def __getitem__(self, i):
+        with h5py.File(self.file_name, 'r') as file:
             X = file['X'][i]
             X = self.transforms(X)
-            Y = torch.tensor(file['Y'][i],dtype=torch.long)
+            Y = torch.tensor(file['Y'][i], dtype=torch.long)
 
-        return X,Y
+        return X, Y
+
 
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--data",type=str,default='temp.hdf5',help='location of file with training data')
-    parser.add_argument("--model", type=str,default='alexnet',help='name of model architecture to use')
-    parser.add_argument("--batch-size",type=int,default=64,help='batch size to use for training')
-    parser.add_argument("--n-epochs",type=int,default=100,help='number of epochs to train for')
-    parser.add_argument("--device",type=str,default='cpu',help='device to run the model on [cpu cuda]')
+    parser.add_argument("-d", "--data", type=str, default='temp.hdf5', help='location of file with training data')
+    parser.add_argument("-m", "--model", type=str, default='alexnet', help='name of model architecture to use')
+    parser.add_argument("-bs", "--batch-size", type=int,default=64, help='batch size to use for training')
+    parser.add_argument("-n", "--n-epochs", type=int,default=100, help='number of epochs to train for')
+    parser.add_argument("-dev", "--device", type=str,default='cpu', help='device to run the model on [cpu, cuda]')
 
     args = parser.parse_args()
 
@@ -48,11 +48,11 @@ def main():
 
 
     dataset = ImitationLearningDataset(args.data)
-    dataloader = torch.utils.data.DataLoader(dataset,args.batch_size)
+    dataloader = torch.utils.data.DataLoader(dataset, args.batch_size)
 
     n_examples = len(dataset)
     n_outputs = 3 + 2
-    model = get_model(False,n_outputs)
+    model = get_model(False, n_outputs)
     model.to(device=args.device)
 
     criterion = nn.CrossEntropyLoss()
@@ -63,16 +63,16 @@ def main():
 
         loss = 0
         t = time.time()
-        for X,Y in dataloader:
+        for X, Y in dataloader:
             X = X.to(device=args.device)
             Y = Y.to(device=args.device)
             output = model(X)
-            loss += criterion(output[...,:2],Y[...,:1].view(-1))
-            loss += criterion(output[...,2:],Y[...,1:].view(-1))
+            loss += criterion(output[...,:2], Y[...,:1].view(-1))
+            loss += criterion(output[...,2:], Y[...,1:].view(-1))
 
         loss.backward()
         optimizer.step()
-        print("Epoch {} Loss {}".format(epoch,loss.item()))
+        print("Epoch {} Loss {}".format(epoch, loss.item()))
     '''
     with h5py.File(args.data,'r') as f:
         data_x = f['X']
