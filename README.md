@@ -23,5 +23,5 @@ The `screen_capture.py`, `grabscreen.py`, `directkeys.py` and `getkeys.py` scrip
 python train_il.py --data <path-to-train-data> --model <name-of-model-architecture> --batch-size 
 <batch-size-for-train> --n-epochs <no-of-epochs> --device <cpu/cuda>
 ```
-which trains the model for Imitation Learning, for which a reference can be found [here](https://arxiv.org/abs/1811.06711)
+which trains the model for Imitation Learning.
 
