@@ -4,6 +4,7 @@
 - [Installation](#Installation)
 - [Input](#Input)
 - [Usage](#Usage)
+- [License](#License)
 
 
 ### Installation
@@ -25,3 +26,5 @@ python train_il.py --data <path-to-train-data> --model <name-of-model-architectu
 ```
 which trains the model for Imitation Learning.
 
+### License
+This project uses the [MIT License](https://opensource.org/licenses/MIT)
