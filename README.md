@@ -1,4 +1,4 @@
-## Self Driving Cars in Video Games using Deep Learning
+# Self Driving Cars in Video Games using Deep Learning
 
 ### Contents
 - [Introduction](#Introduction)
