@@ -30,7 +30,7 @@ Since most video games require **DirectX** and run on **Windows** only, this pro
 
 `grabscreen.py` uses an efficient method to capture the screen on a window desktop. This is using `win32gui` that is part of the `pywin32` package. This method is from [Stackoverflow](https://stackoverflow.com/questions/3586046/fastest-way-to-take-a-screenshot-with-python-on-windows).
 
-In it's current state, it captures a crop of the top left corner of the screen, which is then resized to a resolution of 640x360 to be used by the model. Ideally, you want the video game to run in windowed mode and positioned in the top left corner. The windows title bar is accounted for while cropping the image.
+In it's current state, it captures a crop of the top left corner of the screen, which is then resized to a resolution of 640x360 to be used by the model. Ideally, you want the video game to run in windowed mode in a resolution of 1066x600 and positioned in the top left corner. The windows title bar (which is 40 pixels in my case) is accounted for while cropping the image.
 
 Key presses are captured in `getkeys.py`. This is also using a library that is part of the `pywin32` package.
 
