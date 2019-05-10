@@ -36,19 +36,25 @@ Key presses are captured in `getkeys.py`. This is also using a library that is p
 
 To capture data and store it to a `HDF5` file, run
 ```bash
-python screen_capture.py
+python screen_capture.py [--file OUTPUT_FILE]
+                         [--window-resolution WINDOW_HEIGHT WINDOW_WIDTH]
+                         [--titlebar-adjustment TITLEBAR_ADJUSTMENT]
+                         [--save-test-image]
 ```
 Once it's running, switch over to the video game and press X to start the capture. Press Y to stop the capture. The data is written to a `.hdf5` file.
 
 Once training data is available, it will be hosted on a cloud platform and linked to here.
 
 ### Training IL
-The model is a CNN based architecture. Currently, `AlexNet` is being used. It is trained using the simple behaviour cloning technique, which has a lot of pitfalls that need to be addressed. 
+Unlike RL based methods, which will probably have to run on **Windows** only (since episodes have to be generated on the fly), this part can be done on any operating system.
+
+The model is a CNN based architecture. Currently, `AlexNet` is being used (because my 1050Ti cannot fit anything bigger). It is trained using the simple behaviour cloning technique, which has a lot of pitfalls that need to be addressed. 
 
 To train the model,
 ```bash
-python train_il.py --data <path-to-train-data> --model <name-of-model-architecture> --batch-size 
-<batch-size-for-train> --n-epochs <no-of-epochs> --device <cpu/cuda>
+python train_il.py [--file INPUT_FILE] [--model MODEL_NAME]
+                   [--batch-size BATCH_SIZE] [--n-epochs N_EPOCHS]
+                   [--device DEVICE]
 ```
 We are yet to train the model to view how the performance is. We expect a data-imbalance problem to be there and a solution for that has to be looked into.
 
