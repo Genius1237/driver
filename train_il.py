@@ -9,6 +9,7 @@ import time
 
 def get_model(pretrained, num_classes):
     model = torchvision.models.AlexNet(num_classes)
+    #model = torchvision.models.vgg11(False,num_classes=num_classes)
     return model
 
 class ImitationLearningDataset(torch.utils.data.Dataset):
@@ -59,20 +60,25 @@ def main():
     optimizer = optim.Adam(model.parameters())
 
     for epoch in range(args.n_epochs):
-        model.zero_grad()
 
-        loss = 0
+        epoch_loss = 0
         t = time.time()
         for X, Y in dataloader:
+            loss = 0
+            optimizer.zero_grad()
+
             X = X.to(device=args.device)
             Y = Y.to(device=args.device)
             output = model(X)
             loss += criterion(output[...,:2], Y[...,:1].view(-1))
             loss += criterion(output[...,2:], Y[...,1:].view(-1))
+            
+            loss.backward()
+            optimizer.step()
+            epoch_loss+=loss.item()
 
-        loss.backward()
-        optimizer.step()
         print("Epoch {} Loss {}".format(epoch, loss.item()))
+    
     '''
     with h5py.File(args.data,'r') as f:
         data_x = f['X']
