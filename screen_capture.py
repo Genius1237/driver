@@ -30,7 +30,7 @@ if __name__ == "__main__":
         if "Y" in keys_t:
             break
         image = cv2.resize(image,(640,360))
-        cv2.imwrite('output.png',image)
+        #cv2.imwrite('output.png',image)
         keys = [0,0]
         if 'W' in keys_t:
             keys[0]=0
@@ -47,6 +47,6 @@ if __name__ == "__main__":
         #pickle.dump((image,keys),open('{}.pickle'.format(t),'wb'))
         #data.append((image,keys))
         t_new = time.time()
-        print(1/(t_new-t))
+        #print(1/(t_new-t))
         t = t_new
     #'''
