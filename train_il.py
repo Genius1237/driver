@@ -35,7 +35,7 @@ class ImitationLearningDataset(torch.utils.data.Dataset):
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--data", type=str, default='temp.hdf5', help='location of file with training data')
+    parser.add_argument("--file", type=str, default='temp.hdf5', help='location of file with training data')
     parser.add_argument("--model", type=str, default='alexnet', help='name of model architecture to use')
     parser.add_argument("--batch-size", type=int,default=64, help='batch size to use for training')
     parser.add_argument("--n-epochs", type=int,default=100, help='number of epochs to train for')
@@ -48,7 +48,7 @@ def main():
         exit()
 
 
-    dataset = ImitationLearningDataset(args.data)
+    dataset = ImitationLearningDataset(args.file)
     dataloader = torch.utils.data.DataLoader(dataset, args.batch_size)
 
     n_examples = len(dataset)
