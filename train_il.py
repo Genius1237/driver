@@ -35,11 +35,11 @@ class ImitationLearningDataset(torch.utils.data.Dataset):
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-d", "--data", type=str, default='temp.hdf5', help='location of file with training data')
-    parser.add_argument("-m", "--model", type=str, default='alexnet', help='name of model architecture to use')
-    parser.add_argument("-bs", "--batch-size", type=int,default=64, help='batch size to use for training')
-    parser.add_argument("-n", "--n-epochs", type=int,default=100, help='number of epochs to train for')
-    parser.add_argument("-dev", "--device", type=str,default='cpu', help='device to run the model on [cpu, cuda]')
+    parser.add_argument("--data", type=str, default='temp.hdf5', help='location of file with training data')
+    parser.add_argument("--model", type=str, default='alexnet', help='name of model architecture to use')
+    parser.add_argument("--batch-size", type=int,default=64, help='batch size to use for training')
+    parser.add_argument("--n-epochs", type=int,default=100, help='number of epochs to train for')
+    parser.add_argument("--device", type=str,default='cpu', help='device to run the model on [cpu, cuda]')
 
     args = parser.parse_args()
 
