@@ -6,28 +6,37 @@ import torch.optim as optim
 import argparse
 import h5py
 import time
+from tqdm import tqdm
 
 def get_model(pretrained, num_classes):
-    model = torchvision.models.AlexNet(num_classes)
-    #model = torchvision.models.vgg11(False,num_classes=num_classes)
+    # model = torchvision.models.alexnet(pretrained=False, num_classes=num_classes)
+    # model = torchvision.models.vgg11(pretrained=False, num_classes=num_classes)
+    model = torchvision.models.resnet18(pretrained=False, num_classes=num_classes)
     return model
 
 class ImitationLearningDataset(torch.utils.data.Dataset):
 
-    def __init__(self, file_name):
+    def __init__(self, file_name, test=False):
         self.file_name = file_name
         file = h5py.File(file_name, 'r')
-        self.len = file['X'].shape[0]
-        self.transforms = torchvision.transforms.ToTensor()
+        self.xname = "{}_X".format("test" if test else "train")
+        self.yname = "{}_Y".format("test" if test else "train")
+        self.len = file[self.yname].shape[0]
+        self.transforms = torchvision.transforms.Compose([
+                            torchvision.transforms.ToPILImage(mode='RGB'),
+                            torchvision.transforms.Resize((427,240)),
+                            torchvision.transforms.ToTensor()
+                        ])
+        
 
     def __len__(self):
         return self.len
 
     def __getitem__(self, i):
         with h5py.File(self.file_name, 'r') as file:
-            X = file['X'][i]
+            X = file[self.xname][i]
             X = self.transforms(X)
-            Y = torch.tensor(file['Y'][i], dtype=torch.long)
+            Y = torch.tensor(file[self.yname][i], dtype=torch.long)
 
         return X, Y
 
@@ -48,10 +57,13 @@ def main():
         exit()
 
 
-    dataset = ImitationLearningDataset(args.file)
-    dataloader = torch.utils.data.DataLoader(dataset, args.batch_size)
+    train_dataset = ImitationLearningDataset(args.file,test=False)
+    test_dataset = ImitationLearningDataset(args.file,test=True)
 
-    n_examples = len(dataset)
+    train_dataloader = torch.utils.data.DataLoader(train_dataset, args.batch_size)
+    test_dataloader = torch.utils.data.DataLoader(test_dataset, args.batch_size)
+
+    n_examples = len(train_dataset)
     n_outputs = 3 + 2
     model = get_model(False, n_outputs)
     model.to(device=args.device)
@@ -61,9 +73,9 @@ def main():
 
     for epoch in range(args.n_epochs):
 
-        epoch_loss = 0
-        t = time.time()
-        for X, Y in dataloader:
+        train_loss = 0
+        valid_loss = 0
+        for X, Y in tqdm(train_dataloader):
             loss = 0
             optimizer.zero_grad()
 
@@ -75,9 +87,20 @@ def main():
             
             loss.backward()
             optimizer.step()
-            epoch_loss+=loss.item()
+            train_loss+=loss.item()
+            #input("Done")
+            
+        for X,Y in test_dataloader:
+            loss = 0
+            with torch.no_grad():
+                X = X.to(device=args.device)
+                Y = Y.to(device=args.device)
+                output = model(X)
+                loss += criterion(output[...,:2], Y[...,:1].view(-1))
+                loss += criterion(output[...,2:], Y[...,1:].view(-1))
+            valid_loss+=loss.item()
 
-        print("Epoch {} Loss {}".format(epoch, loss.item()))
+        print("Epoch {} Train Loss {} Validation Loss {}".format(epoch, train_loss, valid_loss))
     
     '''
     with h5py.File(args.data,'r') as f:
