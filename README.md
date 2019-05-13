@@ -41,9 +41,15 @@ python screen_capture.py [--file OUTPUT_FILE]
                          [--titlebar-adjustment TITLEBAR_ADJUSTMENT]
                          [--save-test-image]
 ```
-Once it's running, switch over to the video game and press X to start the capture. Press Y to stop the capture. The data is written to a `.hdf5` file.
+Once it's running, switch over to the video game and press X to start the capture. Press Y to stop the capture. The data is written to a `.hdf5` file. 
 
-Once training data is available, it will be hosted on a cloud platform and linked to here.
+The `hdf5` file will have 4 datasets within it.
+* `train_X` and `train_Y` that can be used for training
+* `test_X` and `test_Y` that can be used as test or validation data
+
+`train`:`test` is in a 4:1 ratio.
+
+Some training data has been collected and is avaiable [here](https://drive.google.com/drive/folders/1iEES6uvdd8H5oWW5aMQcqBvfai9NIRpV?usp=sharing). The folder will include all datasets collected so far.
 
 ### Training IL
 Unlike RL based methods, which will probably have to run on **Windows** only (since episodes have to be generated on the fly), this part can be done on any operating system.
